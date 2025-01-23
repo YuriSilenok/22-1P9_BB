@@ -2,3 +2,8 @@ peewee
 pymysql
 fastapi
 uvicorn
+typing
+pyjwt
+passlib
+python-multipart
+bcrypt
