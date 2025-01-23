@@ -1,0 +1,4 @@
+peewee
+pymysql
+fastapi
+uvicorn
