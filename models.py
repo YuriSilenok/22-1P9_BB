@@ -14,15 +14,33 @@ class User(Table):
     full_name = CharField()
     telegram = CharField()
     role = CharField()  # "volunteer" or "organizer"
+    owner = ForeignKeyField("self", on_delete="CASCADE", on_update="CASCADE")
+
+
+class RegistrationCode(Table):
+    owner = ForeignKeyField(User, on_delete="CASCADE", on_update="CASCADE")
+    value = IntegerField()
+
+
+class Role(Table):
+    name = CharField()
+
+
+class UserRole(Table):
+    user = ForeignKeyField(User, on_delete="CASCADE", on_update="CASCADE")
+    role = ForeignKeyField(Role, on_delete="CASCADE", on_update="CASCADE")
+
 
 class Car(Table):
     color = CharField()
     number = CharField()
 
+
 # Транзитивная таблица для связи пользователя и автомобиля
 class UserCar(Table):
     user = ForeignKeyField(User, on_delete="CASCADE", on_update="CASCADE")
     car = ForeignKeyField(Car, on_delete="CASCADE", on_update="CASCADE")
+
 
 class Event(Table):
     name = CharField()
@@ -54,4 +72,4 @@ class Passenger(Table):
 if __name__ == '__main__':
     with mysql_db:
         mysql_db.create_tables([
-            User, Car, UserCar, Event, EventVolunteer, Drive, PassengerStatus, Passenger])
+            User, Car, UserCar, Event, EventVolunteer, Drive, PassengerStatus, Passenger, RegistrationCode])

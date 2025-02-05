@@ -32,6 +32,7 @@ class UserInDB(UserDATA):
 
 class UserCreate(UserDATA):
     password: str
+    code: str | None = None
 
 class EventCreate(BaseModel):
     name: str
@@ -145,6 +146,14 @@ async def register_user(user: UserCreate):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Username already registered",
         )
+    existing_password = User.get_or_none(password=user.password)
+    if existing_password:
+        if existing_password != User.password:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="wrong password",
+            )
+
     hashed_password = get_password_hash(user.password)
     db_user = User.create(
         username=user.username,
